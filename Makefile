@@ -1,8 +1,19 @@
 #!/bin/sh
+
+# Program metadata.
 PROG=mktext
 VERSION=0.1.0
+LICENSE=MIT
+
+# Get the path of `make` utility.
 MAKE=`which make`
+
+# Extract first parameter as action.
 ACTION=$1; shift;
+
+if [ "$ACTION" == "select" ]; then
+	COND=$1; shift;
+fi
 
 if [ "$ACTION" == "sub" ]; then
 	FROM=$1; shift;
@@ -21,12 +32,12 @@ define help
 	@printf "\t-h,--help\tShow help message\n"
 endef
 
-ARGS=\$(filter-out -v --version -h --help sub,\$(MAKECMDGOALS))
+ARGS=\$(filter-out -v --version -h --help select sub,\$(MAKECMDGOALS))
 
 SPACE=\$(empty) \$(empty)
 NEWLINE=\\n
 
-.PHONY: all unknown -v --version -h --help unknown sub \$(ARGS)
+.PHONY: all unknown -v --version -h --help select sub \$(ARGS)
 
 all: \$(ARGS) unknown
 
@@ -39,6 +50,9 @@ all: \$(ARGS) unknown
 \$(ARGS) unknown:
 	@echo "Unknown action"
 	\$(help)
+
+select:
+	@printf "\$(subst \$(SPACE),\$(NEWLINE),\$(filter $COND,$@))\n"
 
 sub:
 	@printf "\$(subst \$(SPACE),\$(NEWLINE),\$(subst $FROM,$TO,$@))\n"
