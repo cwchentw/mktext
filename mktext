@@ -24,7 +24,7 @@ else
 	NTH=1
 fi
 
-# Parse arguments for the actions *nth*.
+# Parse arguments for the actions *range*.
 if [ "$ACTION" == "range" ]; then
 	PTH=$1; shift;
 	QTH=$1; shift;
