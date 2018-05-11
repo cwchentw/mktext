@@ -26,9 +26,9 @@ ARGS=\$(filter-out -v --version -h --help sub,\$(MAKECMDGOALS))
 SPACE=\$(empty) \$(empty)
 NEWLINE=\\n
 
-.PHONY: all -v --version -h --help unknown sub \$(ARGS)
+.PHONY: all unknown -v --version -h --help unknown sub \$(ARGS)
 
-all: \$(ARGS)
+all: \$(ARGS) unknown
 
 -v --version:
 	@echo $VERSION
@@ -36,7 +36,7 @@ all: \$(ARGS)
 -h --help:
 	\$(help)
 
-\$(ARGS):
+\$(ARGS) unknown:
 	@echo "Unknown action"
 	\$(help)
 
