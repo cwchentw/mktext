@@ -12,7 +12,8 @@ MAKE=`which make`
 ACTION=$1; shift;
 
 # Parse arguments for the actions *filter* and *select*.
-if [ "$ACTION" == "filter" ] || [ "$ACTION" == "select" ]; then
+if [ "$ACTION" == "any" ] || [ "$ACTION" == "filter" ] \
+	|| [ "$ACTION" == "select" ]; then
 	COND=$1; shift;
 fi
 
@@ -27,6 +28,7 @@ define help
 	@echo "Usage: $PROG action ..."
 	@echo ""
 	@echo "Actions:"
+	@printf "\tany cond arg_a arg_b arg_c ...\n"
 	@printf "\tfilter cond arg_a arg_b arg_c ...\n"
 	@printf "\tselect cond arg_a arg_b arg_c ...\n"
 	@printf "\tsort arg_a arg_b arg_c ...\n"
@@ -38,11 +40,20 @@ define help
 	@printf "\t-h,--help\tShow help message\n"
 endef
 
+define check
+	if \$(1); then \
+		true; \
+	else \
+		""; \
+	fi
+endef
+
 # Remove duplicated Makefile targets.
 PARAMETERS=-v --version -h --help --license
-ACTIONS=filter select sort sub
+ACTIONS=any filter select sort sub
 GOALS=\$(filter-out \$(PARAMETERS) \$(ACTIONS), \$(MAKECMDGOALS))
 
+EMPTY=\$(empty)\$(empty)
 SPACE=\$(empty) \$(empty)
 NEWLINE=\\n
 
@@ -62,6 +73,14 @@ all: unknown
 \$(GOALS) unknown:
 	@echo "Unknown action"
 	\$(help)
+
+any: PRED := \$(strip \$(or \$(foreach v,$@,\$(if \$(filter \$(v),$COND),true,\$(EMPTY)))))
+any:
+	@if ! [ -z "\$(PRED)" ]; then \
+		echo true; \
+	else \
+		echo false; \
+	fi
 
 filter:
 	@printf "\$(subst \$(SPACE),\$(NEWLINE),\$(filter-out $COND,$@))\n"
