@@ -115,7 +115,7 @@ Make functions are a small sets of LISPy functions that are greek to many progra
 
 `make` itself is unable to handle command-line arguments and several other features seen in `mktext`. To handle those issues, we embedded a Makefile in a shell script so that we can manage those issues with a `sh` compatible shell. We limit ourself in the features provided by `make` when possble; otherwise, we use the features available in the system shell.
 
-To make a more useful alternative, consider to port it in Perl or some other modern scripting language.
+To make `mktext` a more practical utility, consider to port it in Perl or some other modern scripting language.
 
 ## Author
 
