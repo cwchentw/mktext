@@ -12,7 +12,7 @@ MAKE=`which make`
 ACTION=$1; shift;
 
 # Parse arguments for the actions *filter* and *select*.
-if [ "$ACTION" == "allOf" ] || [ "$ACTION" == "any" ] \
+if [ "$ACTION" == "all" ] || [ "$ACTION" == "any" ] \
 	|| [ "$ACTION" == "filter" ] || [ "$ACTION" == "select" ]; then
 	COND=$1; shift;
 fi
@@ -51,7 +51,7 @@ endef
 
 # Remove duplicated Makefile targets.
 PARAMETERS=-v --version -h --help --license
-ACTIONS=allOf any filter select sort sub
+ACTIONS=all any filter select sort sub
 GOALS=\$(filter-out \$(PARAMETERS) \$(ACTIONS), \$(MAKECMDGOALS))
 
 EMPTY=
@@ -59,9 +59,10 @@ COMMA=\$(empty),\$(empty)
 SPACE=\$(empty) \$(empty)
 NEWLINE=\\n
 
-.PHONY: all unknown \$(PARAMETERS) \$(ACTIONS) \$(GOALS)
+.PHONY: default unknown \$(PARAMETERS) \$(ACTIONS) \$(GOALS)
 
-all: unknown
+# Default target when no active action.
+default: unknown
 
 -v --version:
 	@echo $VERSION
@@ -72,12 +73,13 @@ all: unknown
 -h --help:
 	\$(help)
 
+# Default action when no or unknown action.
 \$(GOALS) unknown:
 	@echo "Unknown action"
 	\$(help)
 
-allOf: PRED := \$(strip \$(filter-out true,\$(foreach v,$@,\$(if \$(filter \$(v),$COND),true,false))))
-allOf:
+all: PRED := \$(strip \$(filter-out true,\$(foreach v,$@,\$(if \$(filter \$(v),$COND),true,false))))
+all:
 	@if [ -z "\$(PRED)" ]; then \
 		echo true; \
 	else \
