@@ -128,7 +128,10 @@ select:
 		printf ""; \
 	fi
 
-sort: OUT := \$(strip \$(subst \$(SPACE),\$(NEWLINE),\$(sort $@)))
+sort: OUT := \
+	\$(strip \
+		\$(subst \$(SPACE),\$(NEWLINE),\
+			\$(sort $@)))
 sort:
 	@if ! [ -z \$(OUT) ]; then \
 		printf "\$(OUT)\n"; \
@@ -136,7 +139,10 @@ sort:
 		printf ""; \
 	fi
 
-sub: OUT := \$(strip \$(subst \$(SPACE),\$(NEWLINE),\$(subst $FROM,$TO,$@)))
+sub: OUT := \
+	\$(strip \
+		\$(subst \$(SPACE),\$(NEWLINE),\
+			\$(subst $FROM,$TO,$@)))
 sub:
 	@if ! [ -z \$(OUT) ]; then \
 		printf "\$(OUT)\n"; \
