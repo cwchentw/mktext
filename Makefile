@@ -78,7 +78,13 @@ default: unknown
 	@echo "Unknown action"
 	\$(help)
 
-all: PRED := \$(strip \$(filter-out true,\$(foreach v,$@,\$(if \$(filter \$(v),$COND),true,false))))
+all: PRED := \
+	\$(strip \
+		\$(filter-out true,\
+			\$(foreach v,$@,\
+				\$(if \$(filter \$(v),$COND),\
+					true,\
+					false))))
 all:
 	@if [ -z "\$(PRED)" ]; then \
 		echo true; \
@@ -86,7 +92,13 @@ all:
 		echo false; \
 	fi
 
-any: PRED := \$(strip \$(filter-out false,\$(foreach v,$@,\$(if \$(filter \$(v),$COND),true,false))))
+any: PRED := \
+	\$(strip \
+		\$(filter-out false,\
+			\$(foreach v,$@,\
+				\$(if \$(filter \$(v),$COND),\
+					true,\
+					false))))
 any:
 	@if ! [ -z "\$(PRED)" ]; then \
 		echo true; \
