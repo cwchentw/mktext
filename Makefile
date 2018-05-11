@@ -41,14 +41,6 @@ define help
 	@printf "\t-h,--help\tShow help message\n"
 endef
 
-define check
-	if \$(1); then \
-		true; \
-	else \
-		""; \
-	fi
-endef
-
 # Remove duplicated Makefile targets.
 PARAMETERS=-v --version -h --help --license
 ACTIONS=all any filter select sort sub
