@@ -20,6 +20,8 @@ fi
 # Parse arguments for the actions *nth*.
 if [ "$ACTION" == "nth" ]; then
 	NTH=$1; shift;
+else
+	NTH=1
 fi
 
 # Parse arguments for the action *sub*.
