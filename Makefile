@@ -57,7 +57,7 @@ GOALS=\$(filter-out \$(PARAMETERS) \$(ACTIONS), \$(MAKECMDGOALS))
 EMPTY=
 COMMA=\$(empty),\$(empty)
 SPACE=\$(empty) \$(empty)
-NEWLINE=\\n
+NEWLINE=\\\\n
 
 .PHONY: default unknown \$(PARAMETERS) \$(ACTIONS) \$(GOALS)
 
@@ -106,11 +106,27 @@ any:
 		echo false; \
 	fi
 
+filter: OUT := \
+	\$(strip \
+		\$(subst \$(SPACE),\$(NEWLINE),\
+			\$(filter-out $COND,$@)))
 filter:
-	@printf "\$(subst \$(SPACE),\$(NEWLINE),\$(filter-out $COND,$@))\n"
+	@if ! [ -z \$(OUT) ]; then \
+		printf "\$(OUT)\n"; \
+	else \
+		printf ""; \
+	fi
 
+select: OUT := \
+	\$(strip \
+		\$(subst \$(SPACE),\$(NEWLINE),\
+			\$(filter $COND,$@)))
 select:
-	@printf "\$(subst \$(SPACE),\$(NEWLINE),\$(filter $COND,$@))\n"
+	@if ! [ -z \$(OUT) ]; then \
+		printf "\$(OUT)\n"; \
+	else \
+		printf ""; \
+	fi
 
 sort:
 	@printf "\$(subst \$(SPACE),\$(NEWLINE),\$(sort $@))\n"
