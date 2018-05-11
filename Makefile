@@ -28,7 +28,7 @@ define help
 	@echo "Usage: $PROG action ..."
 	@echo ""
 	@echo "Actions:"
-	@printf "\tallOf cond arg_a arg_b arg_c ...\n"
+	@printf "\tall cond arg_a arg_b arg_c ...\n"
 	@printf "\tany cond arg_a arg_b arg_c ...\n"
 	@printf "\tfilter cond arg_a arg_b arg_c ...\n"
 	@printf "\tselect cond arg_a arg_b arg_c ...\n"
