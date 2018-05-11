@@ -136,7 +136,12 @@ sort:
 		printf ""; \
 	fi
 
+sub: OUT := \$(strip \$(subst \$(SPACE),\$(NEWLINE),\$(subst $FROM,$TO,$@)))
 sub:
-	@printf "\$(subst \$(SPACE),\$(NEWLINE),\$(subst $FROM,$TO,$@))\n"
+	@if ! [ -z \$(OUT) ]; then \
+		printf "\$(OUT)\n"; \
+	else \
+		printf ""; \
+	fi
 
 END
