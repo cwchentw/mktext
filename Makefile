@@ -24,6 +24,15 @@ else
 	NTH=1
 fi
 
+# Parse arguments for the actions *nth*.
+if [ "$ACTION" == "range" ]; then
+	PTH=$1; shift;
+	QTH=$1; shift;
+else
+	PTH=1
+	QTH=0
+fi
+
 # Parse arguments for the action *sub*.
 if [ "$ACTION" == "sub" ]; then
 	FROM=$1; shift;
@@ -42,8 +51,9 @@ define help
 	@printf "\tsub from to arg_a arg_b arg_c ...\n"
 	@printf "\tsort arg_a arg_b arg_c ...\n"
 	@printf "\tfirst arg_a arg_b arg_c ...\n"
-	@printf "\tnth n arg_a arg_b arg_c ...\n"
 	@printf "\tlast arg_a arg_b arg_c ...\n"
+	@printf "\tnth n arg_a arg_b arg_c ...\n"
+	@printf "\trange m n arg_a arg_b arg_c ...\n"
 	@echo ""
 	@echo "Parameters:"
 	@printf "\t-v,--version\tShow version number\n"
@@ -53,7 +63,7 @@ endef
 
 # Remove duplicated Makefile targets.
 PARAMETERS=-v --version -h --help --license
-ACTIONS=all any filter first nth last select sort sub
+ACTIONS=all any filter first last nth range select sort sub
 GOALS=\$(filter-out \$(PARAMETERS) \$(ACTIONS), \$(MAKECMDGOALS))
 
 SPACE=\$(empty) \$(empty)
@@ -131,6 +141,17 @@ nth: OUT := \
 	\$(strip \
 		\$(word $NTH, $@))
 nth:
+	@if ! [ -z \$(OUT) ]; then \
+		printf "\$(OUT)\n"; \
+	else \
+		printf ""; \
+	fi
+
+range: OUT := \
+	\$(strip \
+		\$(subst \$(SPACE),\$(NEWLINE),\
+			\$(wordlist $PTH,$QTH,$@)))
+range:
 	@if ! [ -z \$(OUT) ]; then \
 		printf "\$(OUT)\n"; \
 	else \
