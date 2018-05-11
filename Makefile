@@ -12,8 +12,8 @@ MAKE=`which make`
 ACTION=$1; shift;
 
 # Parse arguments for the actions *filter* and *select*.
-if [ "$ACTION" == "any" ] || [ "$ACTION" == "filter" ] \
-	|| [ "$ACTION" == "select" ]; then
+if [ "$ACTION" == "allOf" ] || [ "$ACTION" == "any" ] \
+	|| [ "$ACTION" == "filter" ] || [ "$ACTION" == "select" ]; then
 	COND=$1; shift;
 fi
 
@@ -28,6 +28,7 @@ define help
 	@echo "Usage: $PROG action ..."
 	@echo ""
 	@echo "Actions:"
+	@printf "\tallOf cond arg_a arg_b arg_c ...\n"
 	@printf "\tany cond arg_a arg_b arg_c ...\n"
 	@printf "\tfilter cond arg_a arg_b arg_c ...\n"
 	@printf "\tselect cond arg_a arg_b arg_c ...\n"
@@ -50,10 +51,11 @@ endef
 
 # Remove duplicated Makefile targets.
 PARAMETERS=-v --version -h --help --license
-ACTIONS=any filter select sort sub
+ACTIONS=allOf any filter select sort sub
 GOALS=\$(filter-out \$(PARAMETERS) \$(ACTIONS), \$(MAKECMDGOALS))
 
-EMPTY=\$(empty)\$(empty)
+EMPTY=
+COMMA=\$(empty),\$(empty)
 SPACE=\$(empty) \$(empty)
 NEWLINE=\\n
 
@@ -74,7 +76,15 @@ all: unknown
 	@echo "Unknown action"
 	\$(help)
 
-any: PRED := \$(strip \$(or \$(foreach v,$@,\$(if \$(filter \$(v),$COND),true,\$(EMPTY)))))
+allOf: PRED := \$(strip \$(filter-out true,\$(foreach v,$@,\$(if \$(filter \$(v),$COND),true,false))))
+allOf:
+	@if [ -z "\$(PRED)" ]; then \
+		echo true; \
+	else \
+		echo false; \
+	fi
+
+any: PRED := \$(strip \$(filter-out false,\$(foreach v,$@,\$(if \$(filter \$(v),$COND),true,false))))
 any:
 	@if ! [ -z "\$(PRED)" ]; then \
 		echo true; \
