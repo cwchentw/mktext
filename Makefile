@@ -46,8 +46,6 @@ PARAMETERS=-v --version -h --help --license
 ACTIONS=all any filter select sort sub
 GOALS=\$(filter-out \$(PARAMETERS) \$(ACTIONS), \$(MAKECMDGOALS))
 
-EMPTY=
-COMMA=\$(empty),\$(empty)
 SPACE=\$(empty) \$(empty)
 NEWLINE=\\\\n
 
