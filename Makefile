@@ -128,8 +128,13 @@ select:
 		printf ""; \
 	fi
 
+sort: OUT := \$(strip \$(subst \$(SPACE),\$(NEWLINE),\$(sort $@)))
 sort:
-	@printf "\$(subst \$(SPACE),\$(NEWLINE),\$(sort $@))\n"
+	@if ! [ -z \$(OUT) ]; then \
+		printf "\$(OUT)\n"; \
+	else \
+		printf ""; \
+	fi
 
 sub:
 	@printf "\$(subst \$(SPACE),\$(NEWLINE),\$(subst $FROM,$TO,$@))\n"
