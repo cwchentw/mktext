@@ -11,10 +11,15 @@ MAKE=`which make`
 # Extract first parameter as action.
 ACTION=$1; shift;
 
-# Parse arguments for the actions *filter* and *select*.
+# Parse arguments for the actions *all*, *any*, *filter* and *select*.
 if [ "$ACTION" == "all" ] || [ "$ACTION" == "any" ] \
 	|| [ "$ACTION" == "filter" ] || [ "$ACTION" == "select" ]; then
 	COND=$1; shift;
+fi
+
+# Parse arguments for the actions *nth*.
+if [ "$ACTION" == "nth" ]; then
+	NTH=$1; shift;
 fi
 
 # Parse arguments for the action *sub*.
@@ -31,6 +36,7 @@ define help
 	@printf "\tall cond arg_a arg_b arg_c ...\n"
 	@printf "\tany cond arg_a arg_b arg_c ...\n"
 	@printf "\tfilter cond arg_a arg_b arg_c ...\n"
+	@printf "\tnth n arg_a arg_b arg_c ...\n"
 	@printf "\tselect cond arg_a arg_b arg_c ...\n"
 	@printf "\tsort arg_a arg_b arg_c ...\n"
 	@printf "\tsub from to arg_a arg_b arg_c ...\n"
@@ -43,7 +49,7 @@ endef
 
 # Remove duplicated Makefile targets.
 PARAMETERS=-v --version -h --help --license
-ACTIONS=all any filter select sort sub
+ACTIONS=all any filter nth select sort sub
 GOALS=\$(filter-out \$(PARAMETERS) \$(ACTIONS), \$(MAKECMDGOALS))
 
 SPACE=\$(empty) \$(empty)
@@ -101,6 +107,16 @@ filter: OUT := \
 		\$(subst \$(SPACE),\$(NEWLINE),\
 			\$(filter-out $COND,$@)))
 filter:
+	@if ! [ -z \$(OUT) ]; then \
+		printf "\$(OUT)\n"; \
+	else \
+		printf ""; \
+	fi
+
+nth: OUT := \
+	\$(strip \
+		\$(word $NTH, $@))
+nth:
 	@if ! [ -z \$(OUT) ]; then \
 		printf "\$(OUT)\n"; \
 	else \
