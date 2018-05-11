@@ -2,14 +2,14 @@
 
 **DON'T USE IT IN PRODUCTION CODE.**
 
-We developed `mktext` just to demo how to use make functions.
+We developed `mktext` just to demo how to use Make functions.
 
 ## System Requirement
 
 * A recent `sh` compatible shell.
 * A recent GNU Make >= 3.81
 
-We tested `mktext` on a recent CentOS.
+We tested `mktext` on a recent CentOS. It should work on most modern Unix-like systems.
 
 ## Usage
 
@@ -113,7 +113,7 @@ d
 
 Make functions are a small sets of LISPy functions that are greek to many programmers from C family languages. Hence, we wrote `mktext` to show how to (improperly) use those functions.
 
-`make` itself is unable to handle command-line arguments and several other features seen in `mktext`. To handle those issues, we embedded a Makefile in a shell script so that we can manage those issues with a `sh` compatible shell. We limit ourself in the features provided by `make` when possble; otherwise, we use the system shell.
+`make` itself is unable to handle command-line arguments and several other features seen in `mktext`. To handle those issues, we embedded a Makefile in a shell script so that we can manage those issues with a `sh` compatible shell. We limit ourself in the features provided by `make` when possble; otherwise, we use the features available in the system shell.
 
 To make a more useful alternative, consider to port it in Perl or some other modern scripting language.
 
