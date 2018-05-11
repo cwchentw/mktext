@@ -29,6 +29,7 @@ define help
 	@echo "Actions:"
 	@printf "\tfilter cond arg_a arg_b arg_c ...\n"
 	@printf "\tselect cond arg_a arg_b arg_c ...\n"
+	@printf "\tsort arg_a arg_b arg_c ...\n"
 	@printf "\tsub from to arg_a arg_b arg_c ...\n"
 	@echo ""
 	@echo "Parameters:"
@@ -39,7 +40,7 @@ endef
 
 # Remove duplicated Makefile targets.
 PARAMETERS=-v --version -h --help --license
-ACTIONS=filter select sub
+ACTIONS=filter select sort sub
 GOALS=\$(filter-out \$(PARAMETERS) \$(ACTIONS), \$(MAKECMDGOALS))
 
 SPACE=\$(empty) \$(empty)
@@ -67,6 +68,9 @@ filter:
 
 select:
 	@printf "\$(subst \$(SPACE),\$(NEWLINE),\$(filter $COND,$@))\n"
+
+sort:
+	@printf "\$(subst \$(SPACE),\$(NEWLINE),\$(sort $@))\n"
 
 sub:
 	@printf "\$(subst \$(SPACE),\$(NEWLINE),\$(subst $FROM,$TO,$@))\n"
