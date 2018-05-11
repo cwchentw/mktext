@@ -38,6 +38,7 @@ define help
 	@printf "\tall cond arg_a arg_b arg_c ...\n"
 	@printf "\tany cond arg_a arg_b arg_c ...\n"
 	@printf "\tfilter cond arg_a arg_b arg_c ...\n"
+	@printf "\tfirst arg_a arg_b arg_c ...\n"
 	@printf "\tnth n arg_a arg_b arg_c ...\n"
 	@printf "\tselect cond arg_a arg_b arg_c ...\n"
 	@printf "\tsort arg_a arg_b arg_c ...\n"
@@ -51,7 +52,7 @@ endef
 
 # Remove duplicated Makefile targets.
 PARAMETERS=-v --version -h --help --license
-ACTIONS=all any filter nth select sort sub
+ACTIONS=all any filter first nth select sort sub
 GOALS=\$(filter-out \$(PARAMETERS) \$(ACTIONS), \$(MAKECMDGOALS))
 
 SPACE=\$(empty) \$(empty)
@@ -109,6 +110,16 @@ filter: OUT := \
 		\$(subst \$(SPACE),\$(NEWLINE),\
 			\$(filter-out $COND,$@)))
 filter:
+	@if ! [ -z \$(OUT) ]; then \
+		printf "\$(OUT)\n"; \
+	else \
+		printf ""; \
+	fi
+
+first: OUT := \
+	\$(strip \
+		\$(firstword $@))
+first:
 	@if ! [ -z \$(OUT) ]; then \
 		printf "\$(OUT)\n"; \
 	else \
