@@ -11,8 +11,8 @@ MAKE=`which make`
 # Extract first parameter as action.
 ACTION=$1; shift;
 
-# Parse arguments for the action *select*.
-if [ "$ACTION" == "select" ]; then
+# Parse arguments for the actions *filter* and *select*.
+if [ "$ACTION" == "filter" ] || [ "$ACTION" == "select" ]; then
 	COND=$1; shift;
 fi
 
@@ -27,6 +27,7 @@ define help
 	@echo "Usage: $PROG action ..."
 	@echo ""
 	@echo "Actions:"
+	@printf "\tfilter cond arg_a arg_b arg_c ...\n"
 	@printf "\tselect cond arg_a arg_b arg_c ...\n"
 	@printf "\tsub from to arg_a arg_b arg_c ...\n"
 	@echo ""
@@ -36,14 +37,17 @@ define help
 	@printf "\t-h,--help\tShow help message\n"
 endef
 
-ARGS=\$(filter-out -v --version -h --help --license select sub,\$(MAKECMDGOALS))
+# Remove duplicated Makefile targets.
+PARAMETERS=-v --version -h --help --license
+ACTIONS=filter select sub
+GOALS=\$(filter-out \$(PARAMETERS) \$(ACTIONS), \$(MAKECMDGOALS))
 
 SPACE=\$(empty) \$(empty)
 NEWLINE=\\n
 
-.PHONY: all unknown -v --version -h --help select sub \$(ARGS)
+.PHONY: all unknown \$(PARAMETERS) \$(ACTIONS) \$(GOALS)
 
-all: \$(ARGS) unknown
+all: unknown
 
 -v --version:
 	@echo $VERSION
@@ -54,9 +58,12 @@ all: \$(ARGS) unknown
 -h --help:
 	\$(help)
 
-\$(ARGS) unknown:
+\$(GOALS) unknown:
 	@echo "Unknown action"
 	\$(help)
+
+filter:
+	@printf "\$(subst \$(SPACE),\$(NEWLINE),\$(filter-out $COND,$@))\n"
 
 select:
 	@printf "\$(subst \$(SPACE),\$(NEWLINE),\$(filter $COND,$@))\n"
